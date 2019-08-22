@@ -10,9 +10,10 @@ import SwiftUI
 
 // A view drawing a single colored arc with a label
 struct ArcView: View {
-    
+
+    @ObservedObject private var configuration: SunburstConfiguration
+
     private let arc: Sunburst.Arc
-    private let configuration: SunburstConfiguration
     
     init(arc: Sunburst.Arc, configuration: SunburstConfiguration) {
         self.arc = arc
@@ -20,7 +21,7 @@ struct ArcView: View {
     }
     
     var body: some View {
-        let animation = Animation.basic()
+        let animation = Animation.easeInOut
         let arcShape = ArcShape(arc, configuration: configuration)
             .fill(arc.backgroundColor)
             .animation(animation)
@@ -125,8 +126,8 @@ private struct ArcGeometry {
         let radius = lerp(arc.innerRadius, arc.outerRadius, by: unitPoint.y)
         let angle = lerp(arc.start, arc.end, by: Double(unitPoint.x))
         
-        return CGPoint(x: center.x + Length(cos(angle)) * radius,
-                       y: center.y + Length(sin(angle)) * radius)
+        return CGPoint(x: center.x + CGFloat(cos(angle)) * radius,
+                       y: center.y + CGFloat(sin(angle)) * radius)
     }
 }
 
